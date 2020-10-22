@@ -44,14 +44,14 @@ public class ResourceBasedTest {
                             try {
                                 executeOnce(path);
                                 return Stream.empty();
-                            } catch (Exception e) {
+                            } catch (IOException | AssertionError e) {
                                 e.printStackTrace();
                                 return Stream.of(path);
                             }
                         }).collect(Collectors.toList()));
     }
 
-    private void executeOnce(Path resource) throws Exception {
+    private void executeOnce(Path resource) throws IOException {
         final String resourceContent = Files.readString(resource, StandardCharsets.UTF_8);
         final String[] composite = resource.getFileName().toString().split("\\.");
 
