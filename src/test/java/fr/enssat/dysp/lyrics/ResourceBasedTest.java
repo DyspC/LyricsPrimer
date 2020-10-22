@@ -37,8 +37,8 @@ public class ResourceBasedTest {
         Assert.assertEquals("All resources should have passed execution",
                 Collections.emptyList(),
                 Files.list(EXPECTED_FOLDER)
-                        // .filter(Files::isRegularFile)
-                        // .filter(path -> path.endsWith(SAMPLE_SUFFIX))
+                        .filter(Files::isRegularFile)
+                        .filter(path -> path.toString().endsWith(SAMPLE_SUFFIX))
                         .flatMap(path -> {
                             System.out.printf("Found test resource: '%s'%n" , path);
                             try {
