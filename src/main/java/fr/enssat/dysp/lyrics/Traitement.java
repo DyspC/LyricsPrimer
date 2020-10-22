@@ -23,7 +23,7 @@ public class Traitement {
 		replacements.put("[ŌÔ]", "Ou");
 		replacements.put("[ūû]", "uu");
 		replacements.put("[ŪÛ]", "Uu");
-		replacements.put("…([^ ?!])", "… $1");
+		replacements.put("…([^\n \"'\r?!])", "… $1");
 		replacements.put("　", " ");
 
 		optimizations = new HashMap<String, String>();
@@ -88,7 +88,7 @@ public class Traitement {
 				nextLCChar = 'a';
 			}
 			char LCcharacter = Character.toLowerCase(character);
-			System.out.println("reading kind of " + character + " as " + Traitement.analyze(LCcharacter));
+			// System.out.println("reading kind of " + character + " as " + Traitement.analyze(LCcharacter));
 			block0: switch (Traitement.analyze(LCcharacter)) {
 			case ROMAJI_VOWEL:
 				switch (Traitement.analyze(previousLCChar)) {
