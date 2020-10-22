@@ -1,13 +1,9 @@
 package fr.enssat.dysp.lyrics;
 
-import org.apache.commons.io.IOUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-
+import static fr.enssat.dysp.lyrics.utils.TestFileUtils.extractFromResource;
 import static org.junit.Assert.assertEquals;
 
 public class TraitementTest {
@@ -65,17 +61,5 @@ public class TraitementTest {
 
     }
 
-    private String extractFromResource(String directory) {
-        ClassLoader classLoader = getClass().getClassLoader();
-        String content = "";
-        try (InputStream inputStream = classLoader.getResourceAsStream(directory)) {
-
-            content = IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return content;
-    }
 
 }
