@@ -36,7 +36,7 @@ public class Traitement {
 		optimizations.put("o/u", "ou");
 		optimizations.put("([aiueo])/\\1", "$1$1");
 		// Consonnes
-		optimizations.put("/([zrtpmskhgdcb])/\\1", "$1/$1"); // Enlever une sync du sokuon
+		optimizations.put("/([zrtpmskhgdcbj])/\\1", "$1/$1"); // Enlever une sync du sokuon
 		optimizations.put(" t/t", " tt"); // Cas spécial du tte isolé
 		optimizations.put("[/ ]n([^aeiouy])", "n$1"); // Si un mot commence par un n isolé on l'attache au mot d'avant
 														// pour raboter une sync
