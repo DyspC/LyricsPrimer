@@ -1,30 +1,32 @@
 package fr.enssat.dysp.lyrics.ui;
 
-import fr.enssat.dysp.lyrics.logic.Traitement;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-import javax.swing.text.DefaultCaret;
-import java.awt.*;
+import java.net.URL;
 
 public class LyricsPrimerFx extends Application {
 
 	public static void main(String[] args) {
-		Traitement.init();
 		launch();
 	}
 
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		final Label label = new Label(String.format("Hello from Java %s JavaFX %s.",
-				System.getProperty("java.version"),
-				System.getProperty("javafx.version")));
-		final Scene scene = new Scene(new StackPane(label), 640, 480);
+		final URL fxmlTemplate = getClass().getResource("/templates/main.fxml");
+		final URL css = getClass().getResource("/templates/main.css");
+
+		assert fxmlTemplate != null : "Could not load FXML application template";
+		assert css != null : "Could not load application stylesheet";
+
+		final Parent window = FXMLLoader.load(fxmlTemplate);
+		final Scene scene = new Scene(window);
+		scene.getStylesheets().add(css.toExternalForm());
+
+		primaryStage.setTitle("LyricsPrimer v2.15");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
