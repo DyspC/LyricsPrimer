@@ -6,9 +6,21 @@
  * User Manual available at https://docs.gradle.org/6.6.1/userguide/tutorial_java_projects.html
  */
 
+buildscript {
+    ext {
+        javaFxVersion = '17'
+    }
+    dependencies {
+        classpath group: 'de.dynamicfiles.projects.gradle.plugins', name: 'javafx-gradle-plugin', version: '8.8.2'
+    }
+    repositories {
+        mavenCentral()
+    }
+}
+
 plugins {
     // Apply the java plugin to add support for Java
-    id 'java'
+//    id 'java'
 
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
@@ -16,6 +28,13 @@ plugins {
     // JavaFX interface build
     id 'org.openjfx.javafxplugin' version '0.0.10'
 }
+apply plugin: 'java'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+apply plugin: 'javafx-gradle-plugin'
 
 compileJava   {
   options.encoding = 'UTF-8'
@@ -29,8 +48,16 @@ dependencies {
 }
 
 javafx {
-    version = '17'
+    version = "$javaFxVersion"
     modules = ['javafx.controls', 'javafx.fxml']
+}
+
+jfx {
+    // minimal requirement for jfxJar-task
+    mainClass = 'fr.enssat.dysp.lyrics.ui.LyricsPrimerFx'
+
+    // minimal requirement for jfxNative-task
+    vendor = 'Dysp'
 }
 
 jacoco {
@@ -57,21 +84,38 @@ repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
+    mavenCentral()
 }
 
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
 dependencies {
     // standalone
     testCompile 'junit:junit:4.12'
+    runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$platform"
 }
 
 application {
     // Define the main class for the application.
+    mainModule = 'LyricsPrimer.main'
     mainClassName = 'fr.enssat.dysp.lyrics.ui.LyricsPrimerFx'
 }
 
-jar {
-    manifest {
-        // TODO make the jar start with the JavaFx frontend when ready
-        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.ui.LyricsPrimer'
-    }
-}
+//jar {
+//    manifest {
+//        // TODO make the jar start with the JavaFx frontend when ready
+//        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.ui.LyricsPrimerFx'
+//    }
+//    from {
+//        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+//    }
+//}
