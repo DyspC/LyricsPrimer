@@ -5,6 +5,11 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * User Manual available at https://docs.gradle.org/6.6.1/userguide/tutorial_java_projects.html
  */
+buildscript {
+    ext {
+        javaFxVersion = '17'
+    }
+}
 
 plugins {
     // Apply the java plugin to add support for Java
@@ -23,13 +28,28 @@ compileJava   {
   targetCompatibility = '11'
 }
 
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
 dependencies {
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    // standalone
+    testCompile 'junit:junit:4.12'
+//    runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion"
+//    runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion"
+//    runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion"
+    runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$platform"
 }
 
 javafx {
-    version = '17'
+    version = "$javaFxVersion"
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
@@ -72,6 +92,9 @@ application {
 jar {
     manifest {
         // TODO make the jar start with the JavaFx frontend when ready
-        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.ui.LyricsPrimer'
+        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
