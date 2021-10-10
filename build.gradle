@@ -11,6 +11,12 @@ buildscript {
     }
 }
 
+buildscript {
+    ext {
+        javaFxVersion = '17'
+    }
+}
+
 plugins {
     // Apply the java plugin to add support for Java
     id 'java'
@@ -20,6 +26,7 @@ plugins {
     id 'jacoco'
     // JavaFX interface build
     id 'org.openjfx.javafxplugin' version '0.0.10'
+    id "org.beryx.jlink" version "2.24.2"
 }
 
 compileJava   {
@@ -50,6 +57,12 @@ javafx {
     modules = ['javafx.controls', 'javafx.fxml']
 }
 
+jlink {
+    launcher {
+        name = 'LyricsPrimer'
+    }
+}
+
 jacoco {
     toolVersion = "0.8.5"
     reportsDir = file("$buildDir/jacoco")
@@ -76,13 +89,26 @@ repositories {
     jcenter()
 }
 
+def currentOS = org.gradle.internal.os.OperatingSystem.current()
+def platform
+if (currentOS.isWindows()) {
+    platform = 'win'
+} else if (currentOS.isLinux()) {
+    platform = 'linux'
+} else if (currentOS.isMacOsX()) {
+    platform = 'mac'
+}
 dependencies {
     // standalone
     testCompile 'junit:junit:4.12'
+    runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$platform"
+    runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$platform"
 }
 
 application {
     // Define the main class for the application.
+    mainModule = 'LyricsPrimer.main'
     mainClassName = 'fr.enssat.dysp.lyrics.ui.LyricsPrimerFx'
 }
 
