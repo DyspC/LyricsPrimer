@@ -28,15 +28,6 @@ compileJava   {
   targetCompatibility = '11'
 }
 
-def currentOS = org.gradle.internal.os.OperatingSystem.current()
-def currentPlatform
-if (currentOS.isWindows()) {
-    currentPlatform = 'win'
-} else if (currentOS.isLinux()) {
-    currentPlatform = 'linux'
-} else if (currentOS.isMacOsX()) {
-    currentPlatform = 'mac'
-}
 dependencies {
     testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
