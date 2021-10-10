@@ -29,20 +29,24 @@ compileJava   {
 }
 
 def currentOS = org.gradle.internal.os.OperatingSystem.current()
-def platform
+def currentPlatform
 if (currentOS.isWindows()) {
-    platform = 'win'
+    currentPlatform = 'win'
 } else if (currentOS.isLinux()) {
-    platform = 'linux'
+    currentPlatform = 'linux'
 } else if (currentOS.isMacOsX()) {
-    platform = 'mac'
+    currentPlatform = 'mac'
 }
 dependencies {
     testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
-    runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$platform"
-    runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$platform"
-    runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$platform"
+    ["linux", "mac", "win"].stream().filter {
+        currentPlatform == it || project.hasProperty('multiplatform')
+    }.forEach {
+        runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$it"
+        runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$it"
+        runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$it"
+    }
 }
 
 javafx {
@@ -91,6 +95,8 @@ jar {
         attributes 'Main-Class': 'fr.enssat.dysp.lyrics.Main'
     }
     from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }
