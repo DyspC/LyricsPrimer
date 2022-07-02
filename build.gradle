@@ -7,7 +7,7 @@
  */
 buildscript {
     ext {
-        javaFxVersion = '17'
+        javaFxVersion = '18'
     }
 }
 
@@ -19,13 +19,13 @@ plugins {
     id 'application'
     id 'jacoco'
     // JavaFX interface build
-    id 'org.openjfx.javafxplugin' version '0.0.10'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-compileJava   {
-  options.encoding = 'UTF-8'
-  sourceCompatibility = '11'
-  targetCompatibility = '11'
+compileJava {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 }
 
 dependencies {
@@ -41,7 +41,13 @@ dependencies {
      * - 16Mo for MacOS+Windows or MacOS+Linux
      * - 24Mo for all 3 platforms
      */
-    ["linux", "mac", "win"].stream().filter {
+    [
+            "linux",
+            "mac",
+            "win",
+            "linux-aarch64",
+            "mac-aarch64",
+    ].stream().filter {
         project.properties['additionalPlatforms']?.split(',')?.contains(it) || project.hasProperty('multiplatform')
     }.forEach {
         runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$it"
