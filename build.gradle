@@ -29,8 +29,8 @@ compileJava   {
 }
 
 dependencies {
-    testCompile group: 'commons-io', name: 'commons-io', version: '2.6'
-    testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
     /**
      * JavaFx libraries for the build OS will be included in the runtimeClasspath dependencies
      * BUT to build a fatjar for another OS we need to explicitely import them
@@ -83,7 +83,7 @@ repositories {
 
 dependencies {
     // standalone
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 application {
