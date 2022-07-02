@@ -1,5 +1,6 @@
 package fr.enssat.dysp.lyrics;
 
+import fr.enssat.dysp.lyrics.logic.Traitement;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

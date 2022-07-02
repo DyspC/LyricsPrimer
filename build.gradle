@@ -5,6 +5,11 @@
  * For more details take a look at the Java Quickstart chapter in the Gradle
  * User Manual available at https://docs.gradle.org/6.6.1/userguide/tutorial_java_projects.html
  */
+buildscript {
+    ext {
+        javaFxVersion = '18'
+    }
+}
 
 plugins {
     // Apply the java plugin to add support for Java
@@ -13,17 +18,47 @@ plugins {
     // Apply the application plugin to add support for building a CLI application.
     id 'application'
     id 'jacoco'
+    // JavaFX interface build
+    id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-compileJava   {
-  options.encoding = 'UTF-8'
-  sourceCompatibility = '11'
-  targetCompatibility = '11'
+compileJava {
+    options.encoding = 'UTF-8'
+    sourceCompatibility = '11'
+    targetCompatibility = '11'
 }
 
 dependencies {
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    testImplementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    testImplementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+    /**
+     * JavaFx libraries for the build OS will be included in the runtimeClasspath dependencies
+     * BUT to build a fatjar for another OS we need to explicitely import them
+     * `gw jar -Pmultiplatform` to build including modules for declared platforms
+     * `gw jar -PadditionalPlatforms={comma separated platforms eg. 'mac,win'}` to build for specific platforms
+     * Please note dependencies for the build OS will always be included, that makes the jar weight around
+     * - 8Mo for single platform (on MacOS)
+     * - 16Mo for MacOS+Windows or MacOS+Linux
+     * - 24Mo for all 3 platforms
+     */
+    [
+            "linux",
+            "mac",
+            "win",
+            "linux-aarch64",
+            "mac-aarch64",
+    ].stream().filter {
+        project.properties['additionalPlatforms']?.split(',')?.contains(it) || project.hasProperty('multiplatform')
+    }.forEach {
+        runtimeClasspath "org.openjfx:javafx-base:$javaFxVersion:$it"
+        runtimeClasspath "org.openjfx:javafx-graphics:$javaFxVersion:$it"
+        runtimeClasspath "org.openjfx:javafx-controls:$javaFxVersion:$it"
+    }
+}
+
+javafx {
+    version = "$javaFxVersion"
+    modules = ['javafx.controls', 'javafx.fxml']
 }
 
 jacoco {
@@ -54,16 +89,22 @@ repositories {
 
 dependencies {
     // standalone
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
 
 application {
     // Define the main class for the application.
-    mainClassName = 'fr.enssat.dysp.lyrics.LyricsPrimer'
+    mainClassName = 'fr.enssat.dysp.lyrics.ui.LyricsPrimerFx'
 }
 
 jar {
     manifest {
-        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.LyricsPrimer'
+        attributes 'Main-Class': 'fr.enssat.dysp.lyrics.Main'
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from {
+        configurations.runtimeClasspath.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
     }
 }

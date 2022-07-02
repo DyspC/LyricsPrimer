@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import fr.enssat.dysp.lyrics.ui.components.TitledBorder?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity" minWidth="-Infinity"
+            prefHeight="600.0" prefWidth="900.0"
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.enssat.dysp.lyrics.ui.FxLyricsPrimerController">
+   <center>
+      <HBox alignment="CENTER"
+            prefHeight="700.0" prefWidth="900.0"
+            BorderPane.alignment="CENTER">
+         <TitledBorder title="Input">
+            <TextArea fx:id="inputText"/>
+         </TitledBorder>
+         <TitledBorder title="Output">
+            <TextArea fx:id="outputText" editable="false"/>
+         </TitledBorder>
+      </HBox>
+   </center>
+   <bottom>
+      <HBox spacing="5" alignment="CENTER"
+            prefHeight="40.0" prefWidth="900.0"
+            BorderPane.alignment="CENTER">
+         <Button defaultButton="true" mnemonicParsing="false"
+                 text="Split" onMouseClicked="#doSplit"/>
+         <Button mnemonicParsing="false"
+                 text="Optimize" onMouseClicked="#doOptimize"/>
+         <Button mnemonicParsing="false"
+                 text="Extract chorus" onMouseClicked="#doExtractChorus"/>
+      </HBox>
+   </bottom>
+</BorderPane>
